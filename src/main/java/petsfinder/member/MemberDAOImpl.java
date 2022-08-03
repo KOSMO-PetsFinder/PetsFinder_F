@@ -10,4 +10,8 @@ public interface MemberDAOImpl {
 	public int memberInsert(MemberDTO memberDTO);
 	
 	public String idValidate(String id);
+	
+	public String idSearch(MemberDTO memberDTO);
+	
+	public String pwSearch(MemberDTO memberDTO);
 }

@@ -8,7 +8,7 @@
 <%
 // loginId 라는 이름의 쿠키를 읽어온다.
 String loginId = CookieManager.readCookie(request, "loginId");
- 
+
 // 앞에서 읽어온 쿠키값이 있다면 checked 속성값을 변수에 설정한다.
 String cookieCheck = "";
 if(!loginId.equals("")) {
@@ -182,8 +182,8 @@ if(!loginId.equals("")) {
           	<!-- search -->
 	        <div style="display: flex; justify-content: space-between; width: 450px; margin-top: 50px">
 	          <a href="./Regist" style="color: black;">회원가입</a>
-	          <a href="./id_Search.jsp" style="color: red;">아이디 찾기</a>
-	          <a href="./pw_Search.jsp" style="color: red;">비밀번호 찾기</a>
+	          <a href="./id_Search" style="color: red;">아이디 찾기</a>
+	          <a href="./pw_Search" style="color: red;">비밀번호 찾기</a>
 	        </div>
         </div>
     </div>

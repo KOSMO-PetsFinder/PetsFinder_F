@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.oreilly.servlet.MultipartRequest;
 
 public class FileUtil {
- 
+
 	// 파일 업로드 처리
 	public static MultipartRequest uploadFile(HttpServletRequest req, String saveDirectory, int maxPostSize) {
 		

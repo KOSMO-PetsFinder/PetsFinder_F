@@ -1,6 +1,7 @@
 package com.kosmo.petsfinder;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -8,7 +9,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
+import javax.mail.Address;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -26,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import petsfinder.member.MemberDAOImpl;
 import petsfinder.member.MemberDTO;
 import petsfinder.utils.CookieManager;
+import smtp.SMTPAuth;
 
 @Controller
 public class HomeController {
@@ -148,7 +160,7 @@ public class HomeController {
 	    				dto.setMember_addr(address);
 	    				dto.setMember_name(name);
 	    				dto.setMember_phone(phone);
-	    				//dto.setMember_birth(birthday);
+	    				dto.setMember_birth(birthday);
 	    				dto.setMember_gender(gender);
 	    				dto.setMember_photo(photo);
 	    				
@@ -191,16 +203,16 @@ public class HomeController {
 			session.setAttribute("name", dto.getMember_name());
 			session.setAttribute("email", dto.getMember_email());
 			if (save_check != null && save_check.equals("Y")) {
-				// 쿠키 생성. 쿠키값은 로그인 아이디, 유효기간은 1일로 설정
 				CookieManager.makeCookie(resp, "loginId", id, 86400);
 			} else {
-				// 체크를 해제한 경우에는 쿠키 삭제.
 				CookieManager.deleteCookie(resp, "loginId");
 			}
+			
+			model.addAttribute("dto", dto);
+			return "redirect:./";
+		} else {
+			return "redirect:./Login";
 		}
-		
-		model.addAttribute("dto", dto);
-		return "redirect:./";
 	}
 	
 	@RequestMapping("/Logout")
@@ -219,10 +231,10 @@ public class HomeController {
 	public void idDuple(Model model, HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
 		resp.setContentType("text/html; charset=UTF-8");
-		String member_id = req.getParameter("user_id");
+		String member_id = req.getParameter("id");
 		
 		String result = "";
-		System.out.println(member_id);
+		
 		if(member_id == "") {
 	        
 			result = "아이디 입력하세요";
@@ -261,42 +273,28 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/Regist", method = RequestMethod.POST)
-	public String Regist(Model model, HttpServletRequest req, MemberDTO memberDTO) {
+	public String Regist(Model model, HttpServletRequest req) {
 		
-//		String id = req.getParameter("user_id");
-//		String pw = req.getParameter("pass2");
-//		String name = req.getParameter("name");
-//		String birth = req.getParameter("birth");
-//		String gender = req.getParameter("gender");
-//		String email = req.getParameter("email");
+		String id = req.getParameter("user_id");
+		String pw = req.getParameter("pass2");
+		String name = req.getParameter("name");
+		String birth = req.getParameter("birth");
+		String gender = req.getParameter("gender");
+		String email = req.getParameter("email");
 		String address = req.getParameter("zipcode") + " " + req.getParameter("address1") + req.getParameter("address2");
 		String phone = req.getParameter("mobile1") + "-" + req.getParameter("mobile2") + "-" + req.getParameter("mobile3");
-//		
-//		member_idx,
-//		member_id,
-//		member_pass,
-//		member_type, 
-//		member_email,
-//		member_addr,
-//		member_name,
-//		member_phone,
-//		member_reg,
-//		member_birth,
-//		member_gender
-//		member_photo
 		
-//		MemberDTO dto = new MemberDTO();
-//		dto.setMember_id(id);
-//		dto.setMember_pass(pw);
-//		dto.setMember_email(email);
-		memberDTO.setMember_addr(address);
-//		dto.setMember_name(name);
-		memberDTO.setMember_phone(phone);
-//		dto.setMember_birth(birth);
-//		dto.setMember_gender(gender);
-		System.out.println(memberDTO.getMember_id());
+		MemberDTO dto = new MemberDTO();
+		dto.setMember_id(id);
+		dto.setMember_pass(pw);
+		dto.setMember_email(email);
+		dto.setMember_addr(address);
+		dto.setMember_name(name);
+		dto.setMember_phone(phone);
+		dto.setMember_birth(birth);
+		dto.setMember_gender(gender);
 		
-		int success = sqlSession.getMapper(MemberDAOImpl.class).memberInsert(memberDTO);
+		int success = sqlSession.getMapper(MemberDAOImpl.class).memberInsert(dto);
 		
 		if(success == 1) {
 			System.out.println("회원가입 성공");
@@ -305,7 +303,185 @@ public class HomeController {
 			System.out.println("회원가입 실패");
 			return "redirect:./Regist";
 		}
-		
 	}
 	
+	public boolean emailSending(Map<String, String> map) {
+		
+		boolean sendOk = false;
+		
+		// 네이버 SMTP 서버를 사용하기 위한 속성으로 이미 정해져 있는 값으로 설정
+		Properties p = new Properties();
+        p.put("mail.smtp.host", "smtp.naver.com");
+        p.put("mail.smtp.port", "465");
+        p.put("mail.smtp.starttls.enable", "true");
+        p.put("mail.smtp.auth", "true");
+        p.put("mail.smtp.debug", "true");
+        p.put("mail.smtp.socketFactory.port", "465");
+        p.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        p.put("mail.smtp.socketFactory.fallback", "false");
+        
+        try {
+        	// 네이버에 로그인 하여 인증 정보를 얻어온다.
+        	Authenticator auth = new SMTPAuth();
+        	
+        	Session session = Session.getInstance(p, auth);
+        	session.setDebug(true);
+        	
+        	// 제목 설정
+        	MimeMessage msg = new MimeMessage(session);
+        	msg.setSubject(map.get("subject"));
+        	
+        	// 보내는 사람 Email 설정
+        	Address fromAddr = new InternetAddress(map.get("from"));
+        	msg.setFrom(fromAddr);
+        	
+        	// 받는 사람 Email 설정
+        	Address toAddr = new InternetAddress(map.get("to"));
+        	msg.addRecipient(Message.RecipientType.TO, toAddr);
+        	
+        	// 내용 줄바꿈 처리
+        	msg.setContent(map.get("content"), "text/html;charset=UTF-8");
+        	
+        	// 실제 Email 발송 처리 부분
+        	Transport.send(msg);
+        	sendOk = true;
+        } catch (Exception e) {
+        	sendOk = false;
+        	e.printStackTrace();
+        }
+        
+        return sendOk;
+	}
+	
+	// 사용자가 작성한 내용을 form값으로 받아 정리한 후 메일 발송
+	@RequestMapping(value="/emailSendAction.do", method = RequestMethod.POST)
+	public void emailSendAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		
+		String sendResult = "이메일 전송 준비";
+		// form값 정리를 위한 Map 컬렉션
+		Map<String,	String> emailContent = new HashMap<String, String>();
+		// 보내는 사람
+		emailContent.put("from", req.getParameter("from"));
+		// 받는 사람
+		emailContent.put("to", req.getParameter("to"));
+		// 제목
+		emailContent.put("subject", req.getParameter("subject"));
+		
+		// 메일 발송 형식
+		String format = req.getParameter("format");
+		// 내용
+		String content = req.getParameter("content").replace("\r\n", "<br/>");
+		
+		if(format.equals("text")) {
+			// 전송 형식이 text라면 순수한 텍스트만 내용에 추가
+			emailContent.put("content", content);
+		} else if (format.equals("html")) {
+			// html 형식이라면 우리가 디자인 한 메일form에 내용을 추가한 후 메일 발송
+			String oneLine="", mailContents="";
+			try {
+				// 메일 form이 있는 디렉토리의 물리적 경로 얻어오기
+				String dirPath = req.getSession().getServletContext().getRealPath("/resources/mailForm/MailForm.html");
+				// 파일의 내용을 읽어오기 위해 IO스트림을 생성한다.
+	            BufferedReader br = new BufferedReader(new FileReader(dirPath));
+	            // 파일의 내용을 한 줄씩 읽어 변수에 저장
+	            // 더 이상 내용이 없으면 while문 탈출
+	            while((oneLine = br.readLine()) != null){
+	               mailContents += oneLine + "\n";
+	            }
+	            // 스트림 자원 반납
+	            br.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			// 메일 form에서 읽어온 내용(HTML태그)에서 내용 부분 변경
+	        mailContents = mailContents.replace("__CONTENT__", content);
+	        // 내용을 Map컬렉션에 추가
+	        emailContent.put("content", mailContents);
+		}
+		if(req.getParameter("content") != null) {
+			// 입력된 내용이 있다면 메일 발송.
+			// 이 때 form값을 저장한 Map컬렉션을 인수로 전달
+			emailSending(emailContent);
+			// 전송 여부 확인 용
+//            boolean emailResult = emailSending(emailContent);
+//            if(emailResult==true) {
+//               System.out.println("이메일 전송 성공");
+//               sendResult = "이메일 전송 성공";
+//            }
+//            else {
+//               System.out.println("이메일 전송 실패");
+//               sendResult = "이메일 전송 실패";
+//            }
+        }
+		// 컨트롤러에서 즉시 전송 결과 출력
+        resp.setContentType("text/html; charset=utf-8");
+        // 전송 완료 후 뜨는 페이지에 뜨자마자 닫는 script 태그 삽입
+        resp.getWriter().write("<script src=\"https://code.jquery.com/jquery-3.6.0.js\" integrity=\"sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=\" crossorigin=\"anonymous\"></script>\r\n"
+        		+ "<script>\r\n"
+        		+ "$(document).ready(function(){\r\n"
+        		+ "	self.close();\r\n"
+        		+ "});\r\n"
+        		+ "</script>");
+	}
+	
+	@RequestMapping("/idEmailSend")
+	public String idEmailSend() {
+		return "idEmailSend";
+	}
+	
+	@RequestMapping("/id_Search")
+	public String id_Search() {
+		return "id_Search";
+	}
+	
+	@RequestMapping(value="/id_Search", method = RequestMethod.POST)
+	public void id_Search(Model model, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		
+		String name = req.getParameter("name");
+		String email = req.getParameter("email"); 
+		
+		MemberDTO dto = new MemberDTO();
+		dto.setMember_name(name);
+		dto.setMember_email(email);
+		
+		String id = sqlSession.getMapper(MemberDAOImpl.class).idSearch(dto);
+		
+		if(id != null) {
+			model.addAttribute("toEmail", email);
+			model.addAttribute("id", id);
+			resp.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = resp.getWriter();
+    		out.println(String.format("<script>window.open('./idEmailSend?toEmail=%s&id=%s', 'IdCheck', 'width=1, height=1'); location.replace('./Login')</script>", email, id));
+		} else {
+			resp.sendRedirect("./id_Search");
+		}
+	}
+	
+	@RequestMapping("/pw_Reset")
+	public String pwReset() {
+		return "pw_Reset";
+	}
+	
+	@RequestMapping(value="/pw_Search", method = RequestMethod.POST)
+	public void pw_Search(Model model, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		
+		String name = req.getParameter("name");
+		String id = req.getParameter("id");
+		String email = req.getParameter("email"); 
+		
+		MemberDTO dto = new MemberDTO();
+		dto.setMember_name(name);
+		dto.setMember_id(id);
+		dto.setMember_email(email);
+		
+		String pw = sqlSession.getMapper(MemberDAOImpl.class).pwSearch(dto);
+		
+		if(pw != null) {
+			resp.sendRedirect("./pw_Reset");
+		} else {
+			resp.sendRedirect("./pw_Search");
+		}
+	}
 }

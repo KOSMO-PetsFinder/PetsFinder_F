@@ -36,7 +36,7 @@ SELECT * FROM (
   		WHERE rNum>=1 AND rNum<=3;        
         
 
-
+commit;
 
 
 
@@ -63,7 +63,7 @@ CREATE TABLE REPORT_ABANDONED_ANIMALS
 	member_idx number NOT NULL,
 	PRIMARY KEY (dclrAbnd_idx)
 );  
-CREATE SEQUENCE SEQ_dclrAbnd_idx INCREMENT BY 1 START WITH 1;
+CREATE SEQUENCE SEQ_member_member_idx INCREMENT BY 1 START WITH 1;
 INSERT INTO REPORT_ABANDONED_ANIMALS( dclrAbnd_idx,   dclrAbnd_loc, dclrAbnd_title, dclrAbnd_content
                                  , dclrAbnd_photo, dclrAbnd_regdate,   dclrAbnd_stts, member_idx )
                            VALUES(SEQ_dclrAbnd_idx.nextval, '서울시', '123', '123'
@@ -104,5 +104,35 @@ CREATE SEQUENCE SEQ_member_idx INCREMENT BY 1 START WITH 1;
 commit;
 select * from member;
 
+
+
+CREATE TABLE member
+(
+   -- 회원번호
+   member_idx number NOT NULL,
+   -- 아이디
+   member_id varchar2(30) NOT NULL UNIQUE,
+   -- 비밀번호
+   member_pass varchar2(30) NOT NULL,
+   -- 일반/시터/관리자(nor,sit,mag)
+   member_type char(3) NOT NULL,
+   -- 이메일
+   member_email varchar2(30) NOT NULL UNIQUE,
+   -- 주소
+   member_addr varchar2(100) NOT NULL,
+   -- 이름
+   member_name varchar2(30) NOT NULL,
+   -- 전화번호
+   member_phone varchar2(30) NOT NULL,
+   -- 회원가입일
+   member_reg date NOT NULL,
+   -- 회원 나이(생일)
+   member_birth date NOT NULL,
+   -- 회원 성별(F,M)
+   member_gender char(1) NOT NULL,
+   -- 회원 프로필 사진
+   member_photo varchar2(100),
+   PRIMARY KEY (member_idx)
+);
         
         

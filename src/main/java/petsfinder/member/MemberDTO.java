@@ -1,7 +1,5 @@
 package petsfinder.member;
 
-import java.sql.Date;
-
 public class MemberDTO {
 //	-- 회원번호
 	private String member_idx;
@@ -22,19 +20,13 @@ public class MemberDTO {
 //	-- 회원가입일
 	private String member_reg;
 //	-- 회원 나이(생일)
-	private Date member_birth;
+	private String member_birth;
 //	-- 회원 성별(F,M)
 	private String member_gender;
 //	-- 회원 프로필 사진
 	private String member_photo;
 	
 	
-	public Date getMember_birth() {
-		return member_birth;
-	}
-	public void setMember_birth(Date member_birth) {
-		this.member_birth = member_birth;
-	}
 	public String getMember_idx() {
 		return member_idx;
 	}
@@ -88,6 +80,12 @@ public class MemberDTO {
 	}
 	public void setMember_reg(String member_reg) {
 		this.member_reg = member_reg;
+	}
+	public String getMember_birth() {
+		return member_birth;
+	}
+	public void setMember_birth(String member_birth) {
+		this.member_birth = member_birth;
 	}
 	public String getMember_gender() {
 		return member_gender;

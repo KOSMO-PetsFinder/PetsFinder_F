@@ -37,13 +37,13 @@
     	font-family: '나눔고딕';
     }
     .address {
-    	width: 475px; height: 52px; border: 1px solid #cccccc; margin: 0 12px 0 0; padding: 1px 5px; outline: none;
+    	width: 475px; height: 59px; border: 1px solid #cccccc; margin: 0 12px 0 0; padding: 1px 5px; outline: none;
     }
     .zipcode_btn {
-    	border: 0; background-color: #71A2FF; color: white; width: 100px; height: 40px; border-radius: 5px; margin:5px 0; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px;
+    	border: 0; background-color: #75c9ba; color: white; width: 100px; height: 40px; border-radius: 5px; margin:5px 0; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px;
     }
     #zipcode {
-    	width: 100px; height: 52px; border: 1px solid #cccccc; margin: 0 12px 0 0; padding: 1px 5px; outline: none;
+    	width: 100px; height: 59px; border: 1px solid #cccccc; margin: 0 12px 0 0; padding: 1px 5px; outline: none;
     }
   </style>
   <script>
@@ -195,12 +195,11 @@ $(function(){
 	$('#idDuple').click(function(){
 		
 		$.ajax({
-
 			url : "./idDuple",
 			type : "GET",
 			cache: false,
 			data : {
-				"user_id" : $('#id').val(),
+				"id" : $('#id').val(),
 			},
 			dataType : 'text',
 			success : function(data) {
@@ -245,39 +244,12 @@ function zipcodeFind(){
 <!-- registration -->
 <form id="registFrm" name="registFrm" action="./Regist" method="POST" onsubmit="return checkRegiForm(this);">
   <div style="display: flex; flex-direction: column; align-items: center; ">
-    <div style="border: 1px solid gray; width:1500px; height: 2000px; border-radius: 30px; margin-top: 180px; left: 40%; margin-bottom: 280px; box-shadow: rgba(0, 0, 0, 0.65) 0px 2px 20px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; ">
-        <!-- left -->
-        <div style="color: white; background-color: #81A3F0; width: 50%; height: 2000px; border-radius: 30px 0 0 30px; display: flex; justify-content: center; flex-direction: column; align-items: center;">
-          
-          <p style="font-size: 100px; line-height: 120px; font-weight: bold; color: white;">
-            Let's Start!
-            <br>
-            펫츠 파인더!
-          </p>
-          <p style="font-size: 30px; line-height: 40px; margin-top: 80px; font-weight: bold; color: white;">
-            펫츠 파인더에서
-            <br>
-            아이들에게 사랑을..
-            <br />
-            유기견 / 유기묘에게 사랑을 나눠주세요!
-            <br />
-            Pet's Finder가 참다운 활동을 할 수 있도록
-            <br />
-            많은 관심과 격려 부탁드립니다!
-          </p>
-          <p>${ idDup }</p>
-          <p style="font-size: 20px; margin-top: 300px; line-height: 30px; color: white;">
-            <a href="main.html" style="color: white;">PetsFinder</a>
-          </p>
-        </div>
-        <!-- right -->
-        <div style="background-color: white; width: 50%; height: 2000px; border-radius: 0 30px 30px 0; display: flex; justify-content: center; flex-direction: column; align-items: center; box-shadow: rgba(0, 0, 0, 0.65) 0px 2px 20px;">
+    <div style=" display: flex; justify-content: center; flex-direction: column; align-items: center; border: 1px solid gray; width:960px; height: 2200px; border-radius: 30px; margin-top: 180px; left: 40%; margin-bottom: 280px; box-shadow: rgba(0, 0, 0, 0.65) 0px 2px 20px;">
           <div>
-            <img src="" alt="로고" style="width: 250px;">
+            <img src="./images/main_logo.png" alt="로고" style="width: 250px;">
           </div>
           <!-- Id -->
-          <div>
+          <div style="margin-top: 100px">
             <p style="margin-left: 10px; font-size: 20px; font-weight: 600;">아이디</p>
             <div style="width: 475px; height: 59px; display: flex; align-items: center; border: 1px solid #cccccc; margin-top: 10px; padding: 0 24px 0 17px">
               <div>
@@ -286,7 +258,7 @@ function zipcodeFind(){
               <div>
                 <input
                   id="id"
-                  name="member_id"
+                  name="user_id"
                   type="text"
                   placeholder="아이디를 입력하세요!"
                   style="width: 350px; height: 52px; border: 0; margin: 0px 12px; padding: 1px 2px; outline: none;"
@@ -299,7 +271,7 @@ function zipcodeFind(){
             <div style="margin-top: 5px;">
               <p><span id="id_check01" style="color: skyblue"></span></p>
               <p>
-                <li>아이디는 <span style="color: red;">8자리에서 12자리</span>로 입력해주세요</li>
+                <li>아이디는 <span style="color: red;">6자리에서 12자리</span>로 입력해주세요</li>
               </p>
               <p>
                 <li><span style="color: red;">영문과 숫자만</span> 입력해주세요</li>
@@ -316,7 +288,7 @@ function zipcodeFind(){
               <div>
                 <input
                   id="pass1"
-                  name="member_pass"
+                  name="pass1"
                   type="password"
                   placeholder="비밀번호를 입력하세요!"
                   style="width: 350px; height: 52px; border: 0; margin: 0px 12px; padding: 1px 2px; outline: none;"
@@ -371,7 +343,7 @@ function zipcodeFind(){
               <div>
                 <input
                   id="name"
-                  name="member_name"
+                  name="name"
                   type="text"
                   placeholder="이름을 입력하세요!"
                   style="width: 350px; height: 52px; border: 0; margin: 0px 12px; padding: 1px 2px; outline: none;"
@@ -382,22 +354,70 @@ function zipcodeFind(){
               <p><span id="name_check" style="color: skyblue"></span></p>
             </div>
           </div>
-          <div class="mb-3">
-              <label for="birth">생년월일</label>
-              <input type="date" class="form-control" name="member_birth" id="birth" value="" required>
-            </div>
-            
-            <div class="mb-3">
-              <label for="gender">성별</label>
-              <select class="form-control" id="gender" name="member_gender">
-              <option selected>성별</option>
-			  <option value="M">남자</option>
-              <option value="F">여자</option>
-              <option value="U">선택 안함</option>
-			</select>	
-            </div>
+	        <script>
+	        function genF(g) {
+	        	if(g.gen_F.style.backgroundColor == 'rgb(255, 255, 255)') {
+	        		g.gen_F.style.backgroundColor = '#75c9ba'
+	        		g.gen_F.style.color = '#ffffff'
+	        		g.gen_M.style.backgroundColor = '#ffffff'
+	        		g.gen_M.style.color = '#000000'
+	        		g.gender.value = 'F'
+	        	} else {
+	        		g.gen_F.style.backgroundColor = '#ffffff'
+	        		g.gen_F.style.color = '#000000'
+
+	        	}
+	        }
+	        function genM(g) {
+	        	if(g.gen_M.style.backgroundColor == 'rgb(255, 255, 255)') {
+	        		g.gen_M.style.backgroundColor = '#75c9ba'
+	        		g.gen_M.style.color = '#ffffff'
+	        		g.gen_F.style.backgroundColor = '#ffffff'
+	        		g.gen_F.style.color = '#000000'
+	        		g.gender.value = 'M'
+	        	} else {
+	        		g.gen_M.style.backgroundColor = '#ffffff'
+	        		g.gen_M.style.color = '#000000'
+
+	        	}
+	        }
+	        </script>
+          <!-- birthday & gender -->
+          <div style="margin-top: 50px;">
+          	<div style="display: flex">
+	            <p style="margin-left: 10px; font-size: 20px; font-weight: 600;">생년월일</p>
+	            <p style="margin-left: 325px; font-size: 20px; font-weight: 600;">성별</p>
+          	</div>
+            <div style="width: 475px; height: 59px; display: flex; align-items: center; border: 0; margin-top: 10px;">
+              <div style="width: 360px; height: 59px; display: flex; align-items: center; border: 1px solid #cccccc; padding: 0 24px 0 17px;">
+                <div>
+	                <img src="./images/id_icon01.png" alt="" style="width: 35px; height: 30px;">
+              	</div>
+                <input
+                  id="birth"
+                  name="birth"
+                  type="text"
+                  placeholder="생년월일을 입력하세요!"
+                  style="width: 280px; height: 52px; border: 0; margin: 0px 12px; padding: 1px 2px; outline: none;"
+                />
+              </div>
+	            <div style="display: flex; margin-left: 10px">
+				    <div
+					    style="display: flex; justify-content: center; align-items: center; border: 1px solid #cccccc; border-radius: 5px; height: 50px; width: 50px;">
+					    <!-- 여성버튼 -->	
+					    <input type="button" value="F" id="gen_F" name="gen_F" onclick="genF(this.form);" class="btn btn-default gen_btn"  style="background-color: #ffffff; position: absolute; font-size: 17px; color: #333333; height: 50px; width: 50px;">
+				    </div>
+				    <div style="width: 10px"></div>
+				    <div
+				        style="display: flex; justify-content: center; align-items: center; border: 1px solid #cccccc; border-radius: 5px; height: 50px; width: 50px;">
+				        <!-- 남성버튼 -->
+				        <input type="button" value="M" id="gen_M" name="gen_M" onclick="genM(this.form);" class="btn btn-default gen_btn"  style="background-color: #ffffff; position: absolute; font-size: 17px; color: #333333; height: 50px; width: 50px;">
+				    </div>
+				    <input type="hidden" name="gender"/>
+	    		</div>
+          	</div>
           	<!-- Address -->
-	        <div style="margin-top: 50px;">
+	        <div style="margin-top: 30px;">
 	          <p style="margin-left: 10px; font-size: 20px; font-weight: 600;">주소</p>
 	          <div style="width: 475px; display: flex; align-items: left; margin-top: 10px; flex-direction: column;">
 	            <div style="display: flex ">
@@ -428,7 +448,7 @@ function zipcodeFind(){
               <div>
                 <input
                   id="email"
-                  name="member_email"
+                  name="email"
                   type="text"
                   placeholder="이메일을 입력하세요!"
                   style="width: 350px; height: 52px; border: 0; margin: 0px 12px; padding: 1px 2px; outline: none;"
@@ -486,19 +506,16 @@ function zipcodeFind(){
             <div>
               <p style="font-size: 30px; font-weight: bold;">회원 가입</p>
             </div>
-            <button type="submit" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px; width: 60px; height: 60px; background-color: #71A2FF; border-radius: 30px; color: white; display: flex; align-items: center; justify-content: center; border: 0">
+            <button type="submit" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px; width: 60px; height: 60px; background-color: #75c9ba; border-radius: 30px; color: white; display: flex; align-items: center; justify-content: center; border: 0">
               <i class="fa-solid fa-arrow-right-long"></i>
             </button>
           </div>
           <!-- search -->
           <div style="display: flex; justify-content: space-between; width: 450px; margin-top: 50px">
-            <a href="javascript:login();" style="color: black;">로그인</a>
+            <a href="./Login" style="color: black;">로그인</a>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 </form>
-<jsp:include page="./common/foot.jsp" />
 </body>
 </html>

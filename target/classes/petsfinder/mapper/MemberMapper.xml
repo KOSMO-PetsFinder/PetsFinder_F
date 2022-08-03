@@ -26,7 +26,7 @@
 				member_gender
 			)
 		values 
-			(SEQ_member_idx.nextval, #{ member_id }, #{ member_pass }, 'nor', #{ member_email },
+			(SEQ_member_member_idx.nextval, #{ member_id }, #{ member_pass }, 'nor', #{ member_email },
 				#{ member_addr }, #{ member_name }, #{ member_phone }, sysdate, #{ member_birth }, #{ member_gender })
 	</insert>
 	
@@ -34,5 +34,15 @@
 		SELECT member_id FROM member WHERE member_id = #{ param1 }
 	</select>
 
+	<select id="idSearch" resultType="String" parameterType="petsfinder.member.MemberDTO">
+		SELECT member_id FROM member WHERE member_name = #{ member_name } and member_email = #{ member_email }
+	</select>
+	
+	<select id="pwSearch" resultType="String" parameterType="petsfinder.member.MemberDTO">
+		SELECT member_pass FROM member WHERE member_name = #{ member_name } and member_id = #{ member_id } and member_email = #{ member_email }
+	</select>
+	
+
+	
 </mapper>
 
