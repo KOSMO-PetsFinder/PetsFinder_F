@@ -81,24 +81,9 @@ INSERT INTO REPORT_ABANDONED_ANIMALS( dclrAbnd_idx,   dclrAbnd_loc, dclrAbnd_tit
 
 
 
-
---멤버 테이블
-CREATE TABLE member
-(
-	member_idx number NOT NULL,
-	member_id varchar2(30) NOT NULL UNIQUE,
-	member_pass varchar2(30) NOT NULL,
-	member_type char(3) NOT NULL,
-	member_email varchar2(30) NOT NULL UNIQUE,
-	member_addr varchar2(100) NOT NULL,
-	member_name varchar2(30) NOT NULL,
-	member_phone varchar2(30) NOT NULL,
-	member_reg date NOT NULL,
-	member_birth date NOT NULL,
-	member_gender char(1) NOT NULL,
-	member_photo varchar2(100),
-	PRIMARY KEY (member_idx)
-);
+/*
+--멤버 테이블 시작
+*/
 drop table member;
 CREATE SEQUENCE SEQ_member_idx INCREMENT BY 1 START WITH 1;
 commit;
@@ -134,5 +119,67 @@ CREATE TABLE member
    member_photo varchar2(100),
    PRIMARY KEY (member_idx)
 );
+/*
+--멤버 테이블 끝
+*/
+
+
+/*
+유기동물 신고?시작
+*/
+DROP TRIGGER TRI_REPORT_ABANDONED_ANIMALS_dclrAbnd_idx;
+
+DROP TABLE REPORT_ABANDONED_ANIMALS CASCADE CONSTRAINTS;
+
+DROP SEQUENCE SEQ_ABANDONEDANIMAL_ABANI_IDX;
+
+CREATE SEQUENCE SEQ_dclrAbnd_idx INCREMENT BY 1 START WITH 1;
+
+
+CREATE TABLE REPORT_ABANDONED_ANIMALS
+(
+	dclrAbnd_idx number NOT NULL,
+	dclrAbnd_loc varchar2(100) NOT NULL,
+	dclrAbnd_title varchar2(100) NOT NULL,
+	dclrAbnd_content varchar2(2000) NOT NULL,
+	dclrAbnd_photo varchar2(100),
+	dclrAbnd_regdate date NOT NULL,
+	dclrAbnd_stts char(3) NOT NULL,
+	member_idx number NOT NULL,
+	PRIMARY KEY (dclrAbnd_idx)
+);
+
+ALTER TABLE REPORT_ABANDONED_ANIMALS
+	ADD FOREIGN KEY (member_idx)
+	REFERENCES member (member_idx)
+;
+
+/
+
+CREATE OR REPLACE TRIGGER TRI_REPORT_ABANDONED_ANIMALS_dclrAbnd_idx BEFORE INSERT ON REPORT_ABANDONED_ANIMALS
+FOR EACH ROW
+BEGIN
+	SELECT SEQ_REPORT_ABANDONED_ANIMALS_dclrAbnd_idx.nextval
+	INTO :new.dclrAbnd_idx
+	FROM dual;
+END;
+
+/
+
+commit;
+select SEQ_dclrAbnd_idx.nextval from dual;
+INSERT INTO REPORT_ABANDONED_ANIMALS( dclrAbnd_idx,	dclrAbnd_loc, dclrAbnd_title, dclrAbnd_content
+											, dclrAbnd_photo, dclrAbnd_regdate,	dclrAbnd_stts, member_idx )
+									VALUES(SEQ_dclrAbnd_idx.nextval, '?ㅇㅅㅇ', '123', '123'
+, '123', sysdate, '123', 123);
+
+
+/*
+유기동물 신고 끝
+*/
+
+
+
+
         
         

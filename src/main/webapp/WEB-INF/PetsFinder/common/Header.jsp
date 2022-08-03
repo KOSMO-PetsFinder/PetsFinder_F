@@ -87,6 +87,9 @@
                 <li class="last_menu_2depth">
                   <a href="/">입양신청</a>
                 </li>
+                <li class="last_menu_depth">
+                  <a href="./notifyForm.do">유기동물신고하기</a>
+                </li>
               </ul>
             </li>
             <li class="admin">

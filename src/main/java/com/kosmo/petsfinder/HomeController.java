@@ -199,6 +199,7 @@ public class HomeController {
 		MemberDTO dto = sqlSession.getMapper(MemberDAOImpl.class).memberLogin(memberDTO);
 		
 		if(dto != null) {
+			session.setAttribute("idx", dto.getMember_idx());
 			session.setAttribute("id", dto.getMember_id());
 			session.setAttribute("name", dto.getMember_name());
 			session.setAttribute("email", dto.getMember_email());

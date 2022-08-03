@@ -12,6 +12,9 @@ public interface AbandonedAnimalDAOImpl {
 	public AbandonedAnimalDTO abandonedAnimalView(AbandonedAnimalDTO abandonedAnimalDTO);
 	public int getTotalCount();
 	public ArrayList<AbandonedAnimalDTO> listPage(int s, int e);
+	
+	public int notifyForm(ReportDTO reportDTO);
+	
 //	public int getTotalCountSearch(Map<String, String> hmap);
 //	public ArrayList<MyBoardDTO> view(ParameterDTO parameterDTO);
 //	

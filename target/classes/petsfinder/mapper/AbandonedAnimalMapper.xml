@@ -26,7 +26,12 @@
   		WHERE rNum<![CDATA[>=]]>#{param1} AND rNum<![CDATA[<=]]>#{param2}
   	</select>
   	
-  	
+  	<insert id="notifyForm" parameterType="petsfinder.abandonedanimal.ReportDTO">
+		INSERT INTO REPORT_ABANDONED_ANIMALS( dclrAbnd_idx,	dclrAbnd_loc, dclrAbnd_title, dclrAbnd_content
+											, dclrAbnd_photo, dclrAbnd_regdate,	dclrAbnd_stts, member_idx )
+									VALUES(	SEQ_dclrAbnd_idx.nextval, #{dclrAbnd_loc}, #{dclrAbnd_title}, #{dclrAbnd_content}
+											, #{dclrAbnd_photo}, sysdate, 'reg', #{member_idx})
+	</insert>
   	
   	
    
