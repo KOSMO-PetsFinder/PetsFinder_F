@@ -79,7 +79,7 @@
             <li class="adopt" >
               <ul>
                 <li>
-                  <a href="./abanAniList.do">유기동물</a>
+                  <a href="${pageContext.request.contextPath}/AbandonedAnimal/abanAniList.do">유기동물</a>
                 </li>
                 <li>
                   <a href="/">입양후기</a>
@@ -88,7 +88,7 @@
                   <a href="/">입양신청</a>
                 </li>
                 <li class="last_menu_depth">
-                  <a href="./notifyForm.do">유기동물신고하기</a>
+                  <a href="${pageContext.request.contextPath}/AbandonedAnimal/notifyForm.do">유기동물신고하기</a>
                 </li>
               </ul>
             </li>

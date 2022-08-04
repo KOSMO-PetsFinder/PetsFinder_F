@@ -1,4 +1,6 @@
---유기동물 테이블
+/*
+--유기동물 테이블 시작
+*/
 CREATE TABLE abandonedAnimal
 (
 	abani_idx number NOT NULL, --일련번호
@@ -69,18 +71,10 @@ INSERT INTO REPORT_ABANDONED_ANIMALS( dclrAbnd_idx,   dclrAbnd_loc, dclrAbnd_tit
                            VALUES(SEQ_dclrAbnd_idx.nextval, '서울시', '123', '123'
 , '123', sysdate, '123', 123);
 
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+--유기동물 테이블 끝
+*/
+-------------------------------------------------
 /*
 --멤버 테이블 시작
 */
@@ -119,11 +113,17 @@ CREATE TABLE member
    member_photo varchar2(100),
    PRIMARY KEY (member_idx)
 );
+drop SEQUENCE SEQ_member_member_idx;
+CREATE SEQUENCE SEQ_member_member_idx INCREMENT BY 1 START WITH 2;
+select * from member;
+SEQ_member_member_idx.nextval;
+commit;
+
+
 /*
 --멤버 테이블 끝
 */
-
-
+-------------------------------------------------
 /*
 유기동물 신고?시작
 */
@@ -134,7 +134,7 @@ DROP TABLE REPORT_ABANDONED_ANIMALS CASCADE CONSTRAINTS;
 DROP SEQUENCE SEQ_ABANDONEDANIMAL_ABANI_IDX;
 
 CREATE SEQUENCE SEQ_dclrAbnd_idx INCREMENT BY 1 START WITH 1;
-
+commit;
 
 CREATE TABLE REPORT_ABANDONED_ANIMALS
 (
@@ -148,7 +148,7 @@ CREATE TABLE REPORT_ABANDONED_ANIMALS
 	member_idx number NOT NULL,
 	PRIMARY KEY (dclrAbnd_idx)
 );
-
+select * from REPORT_ABANDONED_ANIMALS;
 ALTER TABLE REPORT_ABANDONED_ANIMALS
 	ADD FOREIGN KEY (member_idx)
 	REFERENCES member (member_idx)
@@ -177,9 +177,89 @@ INSERT INTO REPORT_ABANDONED_ANIMALS( dclrAbnd_idx,	dclrAbnd_loc, dclrAbnd_title
 /*
 유기동물 신고 끝
 */
-
-
-
-
-        
+-------------------------------------------------
+/*
+후기게시판 시작
+*/
+CREATE SEQUENCE SEQ_review_board_idx INCREMENT BY 1 START WITH 1;
+drop table review_board;
+CREATE TABLE review_board
+(
+	review_idx number NOT NULL,
+	review_content varchar2(1000) NOT NULL,
+	review_regdate date NOT NULL,
+	review_photo varchar2(200),
+	review_flag char(3) NOT NULL,
+	sit_idx number,
+	member_idx number NOT NULL,
+	abani_idx number,
+	PRIMARY KEY (review_idx)
+);
+INSERT INTO review_board(review_idx, review_content, review_regdate, review_photo,
+                        review_flag, member_idx,abani_idx)
+                    VALUES(SEQ_review_board_idx.nextval, '호호호호호호호호다.', sysdate,'파일경로',
+                    'adp',2,58);
+                    commit;
+select * from abandonedAnimal;
+select * from review_board;
+select * from review_board where abani_idx=58 order by review_idx desc;
+/*
+후기게시판 끝
+*/
+-------------------------------------------------
+/*
+입양목록 시작
+*/
+drop SEQUENCE SEQ_ADOPlist_idx;
+CREATE SEQUENCE SEQ_ADOPlist_idx INCREMENT BY 1 START WITH ;
+CREATE TABLE ADOPTION_list
+(
+	ADOPlist_idx number NOT NULL, --입양목록 일련번호
+	ADOPlist_date date NOT NULL, --입양날짜
+	abani_idx number NOT NULL, --유기동물 일련번호
+	member_idx number NOT NULL, --회원번호
+	PRIMARY KEY (ADOPlist_idx)
+);
+INSERT INTO ADOPTION_list(ADOPlist_idx, ADOPlist_date, abani_idx, member_idx)
+                           VALUES(SEQ_ADOPlist_idx.nextval, sysdate, 58, 2);
+select * from ADOPTION_list;
+/*
+입양목록 끝
+*/
+---------------------------------------------
+/*
+후기 댓글 시작
+*/
+CREATE SEQUENCE SEQ_reviewcomm_idx INCREMENT BY 1 START WITH 1;
+CREATE TABLE review_Comment
+(
+	reviewcomm_idx number NOT NULL,
+	reviewcomm_content varchar2(1000) NOT NULL,
+	reviewcomm_regdate date NOT NULL,
+	review_idx number NOT NULL,
+	member_idx number NOT NULL,
+	PRIMARY KEY (reviewcomm_idx)
+);
+INSERT INTO review_Comment(reviewcomm_idx, reviewcomm_content, reviewcomm_regdate, review_idx,member_idx)
+                           VALUES(SEQ_reviewcomm_idx.nextval,'댓글입니당당' ,sysdate, 1, 1);
+INSERT INTO review_Comment(reviewcomm_idx, reviewcomm_content, reviewcomm_regdate, review_idx,member_idx)
+                           VALUES(SEQ_reviewcomm_idx.nextval,'댓글입니당당' ,sysdate, 2, 1);
+INSERT INTO review_Comment(reviewcomm_idx, reviewcomm_content, reviewcomm_regdate, review_idx,member_idx)
+                           VALUES(SEQ_reviewcomm_idx.nextval,'댓글입니당당' ,sysdate, 3, 1);
+INSERT INTO review_Comment(reviewcomm_idx, reviewcomm_content, reviewcomm_regdate, review_idx,member_idx)
+                           VALUES(SEQ_reviewcomm_idx.nextval,'댓글입니당당' ,sysdate, 4, 1);
+INSERT INTO review_Comment(reviewcomm_idx, reviewcomm_content, reviewcomm_regdate, review_idx,member_idx)
+                           VALUES(SEQ_reviewcomm_idx.nextval,'댓글입니당당' ,sysdate, 5, 1);
+INSERT INTO review_Comment(reviewcomm_idx, reviewcomm_content, reviewcomm_regdate, review_idx,member_idx)
+                           VALUES(SEQ_reviewcomm_idx.nextval,'댓글입니당당' ,sysdate, 6, 1);
+select * from review_Comment;
+--그 입양동물 상세보기에서 쓰인 후기들의 댓글을 모두 가져오는 쿼리
+select * from review_board where abani_idx=58 order by review_idx desc;
+select * from review_Comment where review_idx in(select review_idx from review_board where abani_idx=58);
+--후기 게시판
+select review_idx from review_board where abani_idx=58;
+commit;
+/*
+후기 댓글 끝
+*/        
         

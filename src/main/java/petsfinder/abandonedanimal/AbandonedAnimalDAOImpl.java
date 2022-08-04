@@ -8,30 +8,19 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AbandonedAnimalDAOImpl {
 	
-	
+	//유기동물 하나 가져오기
 	public AbandonedAnimalDTO abandonedAnimalView(AbandonedAnimalDTO abandonedAnimalDTO);
+	//유기동물 전체 갯수 가져오기
 	public int getTotalCount();
+	//유기동물 목록 가져오기
 	public ArrayList<AbandonedAnimalDTO> listPage(int s, int e);
-	
+	//유기동물 신고 저장
 	public int notifyForm(ReportDTO reportDTO);
+	//유기동물 입양 후기 가져오기
+	public ArrayList<ReviewBoardDTO> abaAniReview(int abani_idx);
+	//그 입양동물 상세보기에서 쓰인 후기들의 댓글을 모두 가져오기
+	public ArrayList<ReviewCommentDTO> reviewComment(int abani_idx);
 	
-//	public int getTotalCountSearch(Map<String, String> hmap);
-//	public ArrayList<MyBoardDTO> view(ParameterDTO parameterDTO);
-//	
-//	
-//	
-//	/*
-//	@Param 어노테이션을 통해 파라미터를 Mapper에서 사용할 수 있는 별칭을 부여한다.
-//	해당 별칭으로 쿼리문의 인파라미터로 사용할 수 있다.
-//	 */
-//	public int write(@Param("_name") String name,@Param("_contents") String contents,
-//			@Param("_id") String id);
-//	public MyBoardDTO view(ParameterDTO parameterDTO);
-//	public int modify(MyBoardDTO myBoardDTO);
-//	public int delete(String idx, String id);
-//	
-//	public ArrayList<MyBoardDTO> hashMapUse(Map<String, String> hMap);
-//	public ArrayList<MyBoardDTO> arrayListUse(List<String> aList);
 	
 	
 }
